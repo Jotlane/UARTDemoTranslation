@@ -4,7 +4,16 @@ import serial
 
 print("UART Demonstration Program")
 print("NVIDIA Jetson Nano Developer Kit")
-
+#https://jetsonhacks.com/2019/10/10/jetson-nano-uart/
+#TODO: Make some kind of system for communicating non text stuff
+#eg
+#Whether the line being sent is for translated or transcripted
+#^l for translated
+#^c for transcripted
+#/n for when the line is done
+#Maybe some other system for live updating the same label vs new label. ^n for new label?
+#See ^? -> If n is next, new label. Then, check after if l or c and place accordingly. If not n? Check if l or c and place accordingly but for replacing the same label. If neither idk
+#try it out
 
 serial_port = serial.Serial(
     port="/dev/ttyTHS1",
@@ -15,24 +24,44 @@ serial_port = serial.Serial(
 )
 # Wait a second to let the port initialize
 time.sleep(1)
+#Test cases
+#1: Keep updating the same label
+#2: Make new labels
+#3: Send both translated and transcripted
+#
+
+
+test_case = 1
 
 try:
     # Send a simple header
     serial_port.write("UART Demonstration Program\r\n".encode())
     serial_port.write("NVIDIA Jetson Nano Developer Kit\r\n".encode())
     while True:
-        if serial_port.inWaiting() > 0:
-            data = serial_port.read()
-            print(data)
-            serial_port.write(data)
-            # if we get a carriage return, add a line feed too
-            # \r is a carriage return; \n is a line feed
-            # This is to help the tty program on the other end 
-            # Windows is \r\n for carriage return, line feed
-            # Macintosh and Linux use \n
-            if data == "\r".encode():
-                # For Windows boxen on the other end
-                serial_port.write("\n".encode())
+        if (test_case == 1):
+            i = 0
+            if serial_port.inWaiting() > 0:
+                serial_port.write("^lTest case 1. Num here shld increase {}\n".format(i).encode())
+                i = i + 1
+                time.sleep(1)
+        elif (test_case == 2):
+            i = 0
+            if serial_port.inWaiting() > 0:
+                serial_port.write("^n^lTest case 1. Num here shld increase {}\n".format(i).encode())
+                i = i + 1
+                time.sleep(1)
+        elif (test_case == 3):
+            i = 0
+            if serial_port.inWaiting() > 0:
+                tort = "^l"
+                if (i%2 == 0):
+                    tort = "^c"
+                else:
+                    tort = "^l"
+                serial_port.write("^n{}Test case 1. Num here shld increase {}\n".format(tort,i).encode())
+                i = i + 1
+                time.sleep(1)
+
 
 
 except KeyboardInterrupt:
