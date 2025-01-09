@@ -41,15 +41,13 @@ try:
         if (test_case == 1):
             i = 0
             if serial_port.inWaiting() > 0:
-                serial_port.write("^lTest case 1. Num here shld increase {}\n".format(i).encode())
+                serial_port.write("^l1. Num here shld increase {}\n".format(i).encode())
                 i = i + 1
-                time.sleep(1)
         elif (test_case == 2):
             i = 0
             if serial_port.inWaiting() > 0:
-                serial_port.write("^n^lTest case 1. Num here shld increase {}\n".format(i).encode())
+                serial_port.write("^l^n2. Num here shld increase {}\n".format(i).encode())
                 i = i + 1
-                time.sleep(1)
         elif (test_case == 3):
             i = 0
             if serial_port.inWaiting() > 0:
@@ -58,9 +56,9 @@ try:
                     tort = "^c"
                 else:
                     tort = "^l"
-                serial_port.write("^n{}Test case 1. Num here shld increase {}\n".format(tort,i).encode())
+                serial_port.write("{}^n3. Num here shld increase {}\n".format(tort,i).encode())
                 i = i + 1
-                time.sleep(1)
+        time.sleep(1)
 
 
 
